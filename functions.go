@@ -66,8 +66,8 @@ func (c *Client) PodcastByFeedURL(url string) (*Podcast, error) {
 }
 
 // PodcastByFeedID returns general information about a podcast by its id
-func (c *Client) PodcastByFeedID(id uint) (*Podcast, error) {
-	url := fmt.Sprintf("podcasts/byfeedid?id=%d&fulltext", id)
+func (c *Client) PodcastByFeedID(id string) (*Podcast, error) {
+	url := fmt.Sprintf("podcasts/byfeedid?id=%s&fulltext", id)
 	return c.getPodcast(url, errors.New("Could not find a podcast for that id"))
 }
 
