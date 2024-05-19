@@ -134,3 +134,14 @@ type NewPodcast struct {
 	ContentHash string `json:"contentHash"`
 	Language    string `json:"language"`
 }
+
+type CategoryArrayResponse struct {
+	Status      string  `json:"status"`
+	Count       int     `json:"count"`
+	items 		[]*Category `json.feeds`
+}
+
+type Category struct {
+	ID 			int 	`json.id`
+	name 		string 	`json.name`
+}

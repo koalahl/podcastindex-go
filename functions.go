@@ -228,3 +228,16 @@ func (c *Client) NewPodcasts() ([]*NewPodcast, error) {
 	}
 	return result.Feeds, err
 }
+
+func (c *Client) Categories() ( []*Category,error) {
+	url := fmt.Sprintf("categories/list")
+	result := &CategoryArrayResponse{}
+	err := c.request(url, result)
+	if err != nil {
+		return nil, err
+	}
+	if result.Status == "false" {
+		return nil, errors.New("Could not find the newest podcasts")
+	}
+	return result.items, err
+}
