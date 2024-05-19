@@ -18,7 +18,7 @@ func (c *Client) Search(term string) ([]*Podcast, error) {
 // - fullBody to return the more then 100 characters in the descriptions
 //
 // - max for the number of results, when set to 0 it uses the API default
-func (c *Client) SearchC(term string, clean bool, max uint) ([]*Podcast, error) {
+func (c *Client) SearchC(term string, clean bool, max int) ([]*Podcast, error) {
 	url := fmt.Sprintf("search/byterm?q=\"%s\"&fulltext%s%s", term, addClean(clean), addMax(max))
 	result := &PodcastArrayResult{}
 	err := c.request(url, result)
@@ -41,7 +41,7 @@ It searches the following fields:
 - Feed owner
 - Feed author
 */
-func (c *Client) SearchEpisodes(term string, clean bool, max uint) ([]*Episode, error) {
+func (c *Client) SearchEpisodes(term string, clean bool, max int) ([]*Episode, error) {
 	url := fmt.Sprintf("search/byperson?q=\"%s\"&fulltext%s%s", term, addClean(clean), addMax(max))	
 	return c.getEpisodes(url, errors.New("Could not find a episode for that term"))
 }
@@ -73,8 +73,8 @@ func (c *Client) PodcastByFeedID(id string) (*Podcast, error) {
 
 // PodcastByITunesID returns general information about a podcast by its
 // ITune id
-func (c *Client) PodcastByITunesID(id uint) (*Podcast, error) {
-	url := fmt.Sprintf("podcasts/byitunesid?id=%d&fulltext", id)
+func (c *Client) PodcastByITunesID(id string) (*Podcast, error) {
+	url := fmt.Sprintf("podcasts/byitunesid?id=%s&fulltext", id)
 	return c.getPodcast(url, errors.New("Could not find a podcast for that iTunes id"))
 }
 
@@ -97,8 +97,8 @@ func (c *Client) getEpisodes(url string, notFound error) ([]*Episode, error) {
 //
 // - since = only return episodes since that time. Set time to zero to not filter
 // by time
-func (c *Client) EpisodesByFeedID(id uint, max uint, since time.Time) ([]*Episode, error) {
-	url := fmt.Sprintf("episodes/byfeedid?id=%d&fulltext%s%s", id, addMax(max), addTime(since))
+func (c *Client) EpisodesByFeedID(id string, max int, since time.Time) ([]*Episode, error) {
+	url := fmt.Sprintf("episodes/byfeedid?id=%s&fulltext%s%s", id, addMax(max), addTime(since))
 	return c.getEpisodes(url, errors.New("Could not get episodes by feed id"))
 }
 
@@ -109,7 +109,7 @@ func (c *Client) EpisodesByFeedID(id uint, max uint, since time.Time) ([]*Episod
 //
 // - since = only return episodes since that time. Set time to zero to not filter
 // by time
-func (c *Client) EpisodesByFeedURL(feedURL string, max uint, since time.Time) ([]*Episode, error) {
+func (c *Client) EpisodesByFeedURL(feedURL string, max int, since time.Time) ([]*Episode, error) {
 	url := fmt.Sprintf("episodes/byfeedurl?url=\"%s\"&fulltext%s%s", feedURL, addMax(max), addTime(since))
 	return c.getEpisodes(url, errors.New("Could not get episodes by feed URL"))
 }
@@ -121,14 +121,14 @@ func (c *Client) EpisodesByFeedURL(feedURL string, max uint, since time.Time) ([
 //
 // - since = only return episodes since that time. Set time to zero to not filter
 // by time
-func (c *Client) EpisodesByITunesID(id uint, max uint, since time.Time) ([]*Episode, error) {
-	url := fmt.Sprintf("episodes/byitunesid?id=%d&fulltext%s%s", id, addMax(max), addTime(since))
+func (c *Client) EpisodesByITunesID(id string, max int, since time.Time) ([]*Episode, error) {
+	url := fmt.Sprintf("episodes/byitunesid?id=%s&fulltext%s%s", id, addMax(max), addTime(since))
 	return c.getEpisodes(url, errors.New("Could not get episodes by iTunes id"))
 }
 
 // EpisodeByID return a single episode by its id
-func (c *Client) EpisodeByID(id uint) (*Episode, error) {
-	url := fmt.Sprintf("episodes/byid?id=%d&fulltext", id)
+func (c *Client) EpisodeByID(id string) (*Episode, error) {
+	url := fmt.Sprintf("episodes/byid?id=%s&fulltext", id)
 	result := &EpisodeResponse{}
 	err := c.request(url, result)
 	if err != nil {
@@ -155,7 +155,7 @@ func (c *Client) EpisodeByID(id uint) (*Episode, error) {
 //
 // - max = number of episodes to return, if max is 0 the default number of episodes will be
 // returned, the default is 1
-func (c *Client) RandomEpisodes(languages, categories, notCategories []string, max uint) ([]*Episode, error) {
+func (c *Client) RandomEpisodes(languages, categories, notCategories []string, max int) ([]*Episode, error) {
 	url := fmt.Sprintf("episodes/random?fulltext%s%s%s%s", addMax(max), addFilter("lang", languages), addFilter("cat", categories), addFilter("notcat", notCategories))
 	result := &RandomEpisodesResponse{}
 	err := c.request(url, result)
@@ -178,7 +178,7 @@ func (c *Client) RandomEpisodes(languages, categories, notCategories []string, m
 //
 // - max = number of episodes to return, if max is 0 the default number of episodes will be
 // returned, the default is 10
-func (c *Client) RecentEpisodes(before uint, max uint, exclude string) ([]*Episode, error) {
+func (c *Client) RecentEpisodes(before int, max int, exclude string) ([]*Episode, error) {
 	url := fmt.Sprintf("recent/episodes?fulltext%s%s%s", addMax(max), addExclude(exclude), addBefore(before))
 	return c.getEpisodes(url, errors.New("Could not get recent episodes"))
 }
@@ -199,7 +199,7 @@ func (c *Client) RecentEpisodes(before uint, max uint, exclude string) ([]*Episo
 //
 // - since = only return episodes since that time. Set time to zero to not filter
 // by time
-func (c *Client) RecentPodcasts(languages, categories, notCategories []string, max uint, since time.Time) ([]*RecentPodcast, error) {
+func (c *Client) RecentPodcasts(languages, categories, notCategories []string, max int, since time.Time) ([]*RecentPodcast, error) {
 	url := fmt.Sprintf("recent/feeds?fulltext%s%s%s%s%s",
 		addMax(max), addFilter("lang", languages), addFilter("cat", categories),
 		addFilter("notcat", notCategories), addTime(since),

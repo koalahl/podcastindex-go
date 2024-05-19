@@ -6,14 +6,14 @@ import (
 	"time"
 )
 
-func addMax(max uint) string {
+func addMax(max int) string {
 	if max != 0 {
 		return fmt.Sprintf("&max=%d", max)
 	}
 	return ""
 }
 
-func addBefore(before uint) string {
+func addBefore(before int) string {
 	if before != 0 {
 		return fmt.Sprintf("&before=%d", before)
 	}
