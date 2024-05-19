@@ -138,10 +138,10 @@ type NewPodcast struct {
 type CategoryArrayResponse struct {
 	Status      string  `json:"status"`
 	Count       int     `json:"count"`
-	items 		[]*Category `json.feeds`
+	Feeds 		[]*Category `json:"feeds"`
 }
 
 type Category struct {
-	ID 			int 	`json.id`
-	name 		string 	`json.name`
+	ID 			int 	`json:"id"`
+	Name 		string 	`json:"name"`
 }
