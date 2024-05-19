@@ -239,5 +239,6 @@ func (c *Client) Categories() ( []*Category,error) {
 	if result.Status == "false" {
 		return nil, errors.New("Could not find the newest podcasts")
 	}
+	
 	return result.items, err
 }
