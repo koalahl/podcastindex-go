@@ -1,3 +1,3 @@
-module github.com/TheHippo/podcastindex
+module github.com/koalahl/podcastindex-go
 
 go 1.16
