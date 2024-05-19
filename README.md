@@ -19,7 +19,7 @@ import (
     "log"
     "time"
 
-    "github.com/TheHippo/podcastindex"
+    "github.com/koalahl/podcastindex-go"
 )
 
 func main() {
