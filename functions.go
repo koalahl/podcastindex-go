@@ -20,7 +20,7 @@ func (c *Client) Search(term string) ([]*Podcast, error) {
 // - max for the number of results, when set to 0 it uses the API default
 func (c *Client) SearchC(term string, clean bool, max uint) ([]*Podcast, error) {
 	url := fmt.Sprintf("search/byterm?q=\"%s\"&fulltext%s%s", term, addClean(clean), addMax(max))
-	result := &podcastsResult{}
+	result := &PodcastArrayResult{}
 	err := c.request(url, result)
 	if err != nil {
 		return nil, err
@@ -31,8 +31,23 @@ func (c *Client) SearchC(term string, clean bool, max uint) ([]*Podcast, error) 
 	return result.Feeds, err
 }
 
+/*This call returns all of the episodes where the specified person is mentioned.
+
+It searches the following fields:
+
+- Person tags
+- Episode title
+- Episode description
+- Feed owner
+- Feed author
+*/
+func (c *Client) SearchEpisodes(term string, clean bool, max uint) ([]*Episode, error) {
+	url := fmt.Sprintf("search/byperson?q=\"%s\"&fulltext%s%s", term, addClean(clean), addMax(max))	
+	return c.getEpisodes(url, errors.New("Could not find a episode for that term"))
+}
+
 func (c *Client) getPodcast(url string, notFound error) (*Podcast, error) {
-	result := &podcastResult{}
+	result := &PodcastResult{}
 	err := c.request(url, result)
 	if err != nil {
 		return nil, err
@@ -64,7 +79,7 @@ func (c *Client) PodcastByITunesID(id uint) (*Podcast, error) {
 }
 
 func (c *Client) getEpisodes(url string, notFound error) ([]*Episode, error) {
-	result := &episodesResponse{}
+	result := &EpisodeArrayResponse{}
 	err := c.request(url, result)
 	if err != nil {
 		return nil, err
@@ -75,7 +90,7 @@ func (c *Client) getEpisodes(url string, notFound error) ([]*Episode, error) {
 	return result.Items, nil
 }
 
-// EpisodesByFeedID returns episodes for a podcast by its id
+// EpisodesByFeedID returns all episodes for a podcast by its id
 //
 // - max = number of episodes to return, if max is 0 the default number of episodes will be
 // returned
@@ -114,7 +129,7 @@ func (c *Client) EpisodesByITunesID(id uint, max uint, since time.Time) ([]*Epis
 // EpisodeByID return a single episode by its id
 func (c *Client) EpisodeByID(id uint) (*Episode, error) {
 	url := fmt.Sprintf("episodes/byid?id=%d&fulltext", id)
-	result := &episodeResponse{}
+	result := &EpisodeResponse{}
 	err := c.request(url, result)
 	if err != nil {
 		return nil, err
@@ -142,7 +157,7 @@ func (c *Client) EpisodeByID(id uint) (*Episode, error) {
 // returned, the default is 1
 func (c *Client) RandomEpisodes(languages, categories, notCategories []string, max uint) ([]*Episode, error) {
 	url := fmt.Sprintf("episodes/random?fulltext%s%s%s%s", addMax(max), addFilter("lang", languages), addFilter("cat", categories), addFilter("notcat", notCategories))
-	result := &randomEpisodesResponse{}
+	result := &RandomEpisodesResponse{}
 	err := c.request(url, result)
 	if err != nil {
 		return nil, err
@@ -189,7 +204,7 @@ func (c *Client) RecentPodcasts(languages, categories, notCategories []string, m
 		addMax(max), addFilter("lang", languages), addFilter("cat", categories),
 		addFilter("notcat", notCategories), addTime(since),
 	)
-	result := &recentPodcastsResponse{}
+	result := &RecentPodcastsResponse{}
 	err := c.request(url, result)
 	if err != nil {
 		return nil, err
@@ -203,7 +218,7 @@ func (c *Client) RecentPodcasts(languages, categories, notCategories []string, m
 // NewPodcasts return up to 1000 podcasts that have been added to the database over the last week
 func (c *Client) NewPodcasts() ([]*NewPodcast, error) {
 	url := fmt.Sprintf("recent/newfeeds")
-	result := &newPodcastResponse{}
+	result := &NewPodcastResponse{}
 	err := c.request(url, result)
 	if err != nil {
 		return nil, err

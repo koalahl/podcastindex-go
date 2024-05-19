@@ -1,6 +1,6 @@
 package podcastindex
 
-type podcastsResult struct {
+type PodcastArrayResult struct {
 	Status      string     `json:"status"`
 	Feeds       []*Podcast `json:"feeds"`
 	Count       int        `json:"count"`
@@ -8,7 +8,7 @@ type podcastsResult struct {
 	Description string     `json:"description"`
 }
 
-type podcastResult struct {
+type PodcastResult struct {
 	Status string `json:"status"`
 	Query  struct {
 		URL string `json:"url"`
@@ -45,7 +45,7 @@ type Podcast struct {
 	Categories             map[uint]string `json:"categories"`
 }
 
-type episodesResponse struct {
+type EpisodeArrayResponse struct {
 	Status      string     `json:"status"`
 	Items       []*Episode `json:"items"`
 	Count       int        `json:"count"`
@@ -53,7 +53,7 @@ type episodesResponse struct {
 	Description string     `json:"description"`
 }
 
-type randomEpisodesResponse struct {
+type RandomEpisodesResponse struct {
 	Status      string     `json:"status"`
 	Items       []*Episode `json:"episodes"`
 	Count       int        `json:"count"`
@@ -61,7 +61,7 @@ type randomEpisodesResponse struct {
 	Description string     `json:"description"`
 }
 
-type episodeResponse struct {
+type EpisodeResponse struct {
 	Status      string   `json:"status"`
 	ID          string   `json:"id"`
 	Episode     *Episode `json:"episode"`
@@ -95,7 +95,7 @@ type Episode struct {
 	TranscriptURL   string   `json:"transcriptUrl"`
 }
 
-type recentPodcastsResponse struct {
+type RecentPodcastsResponse struct {
 	Status      string           `json:"status"`
 	Feeds       []*RecentPodcast `json:"feeds"`
 	Count       int              `json:"count"`
@@ -117,7 +117,7 @@ type RecentPodcast struct {
 	Language              string `json:"language"`
 }
 
-type newPodcastResponse struct {
+type NewPodcastResponse struct {
 	Status      string        `json:"status"`
 	Feeds       []*NewPodcast `json:"feeds"`
 	Count       int           `json:"count"`
