@@ -6,19 +6,19 @@ import (
 	"time"
 )
 
-// Search for podcasts, authors or owners
-func (c *Client) Search(term string) ([]*Podcast, error) {
-	return c.SearchC(term, false, 0)
+// SearchPodcasts for podcasts, authors or owners
+func (c *Client) SearchPodcasts(term string) ([]*Podcast, error) {
+	return c.SearchPodcastsC(term, false, 0)
 }
 
-// SearchC for searching with more options than Search
+// SearchPodcastsC for searching with more options than Search
 //
 // - clean for non explicit feeds according to itunes:explicit
 //
 // - fullBody to return the more then 100 characters in the descriptions
 //
 // - max for the number of results, when set to 0 it uses the API default
-func (c *Client) SearchC(term string, clean bool, max int) ([]*Podcast, error) {
+func (c *Client) SearchPodcastsC(term string, clean bool, max int) ([]*Podcast, error) {
 	url := fmt.Sprintf("search/byterm?q=\"%s\"&fulltext%s%s", term, addClean(clean), addMax(max))
 	result := &PodcastArrayResult{}
 	err := c.request(url, result)
@@ -41,8 +41,8 @@ It searches the following fields:
 - Feed owner
 - Feed author
 */
-func (c *Client) SearchEpisodes(term string, clean bool, max int) ([]*Episode, error) {
-	url := fmt.Sprintf("search/byperson?q=\"%s\"&fulltext%s%s", term, addClean(clean), addMax(max))	
+func (c *Client) SearchEpisodes(term string) ([]*Episode, error) {
+	url := fmt.Sprintf("search/byperson?q=\"%s\"&fulltext", term)	
 	return c.getEpisodes(url, errors.New("Could not find a episode for that term"))
 }
 
