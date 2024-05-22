@@ -136,12 +136,28 @@ type NewPodcast struct {
 }
 
 type CategoryArrayResponse struct {
-	Status      string  `json:"status"`
-	Count       int     `json:"count"`
-	Feeds 		[]*Category `json:"feeds"`
+	Status string      `json:"status"`
+	Count  int         `json:"count"`
+	Feeds  []*Category `json:"feeds"`
 }
 
 type Category struct {
-	ID 			int 	`json:"id"`
-	Name 		string 	`json:"name"`
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
+type PodcastsTrendingResponse struct {
+	Status      string      `json:"status"`
+	Feeds       []*Podcast  `json:"feeds"`
+	Count       int         `json:"count"`
+	Max         interface{} `json:"max"`
+	Since       interface{} `json:"since"`
+	Description string      `json:"description"`
+}
+
+type AddByFeedURLResponse struct {
+	Status      string `json:"status"`
+	FeedId      int    `json:"feedId"`
+	Existed     bool   `json:"existed"`
+	Description string `json:"description"`
 }

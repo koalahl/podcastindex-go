@@ -242,3 +242,35 @@ func (c *Client) Categories() ( []*Category,error) {
 
 	return result.Feeds, err
 }
+
+// PodcastsTrending returns the top max podcasts by their popularity
+func (c *Client) PodcastsTrending(languages, categories, notCategories []string, max int, since time.Time) ([]*Podcast, error) {
+	url := fmt.Sprintf("podcasts/trending?fulltext%s%s%s%s%s",
+	addMax(max), addFilter("lang", languages), addFilter("cat", categories),
+	addFilter("notcat", notCategories), addTime(since))
+
+	result := &PodcastsTrendingResponse{}
+	err := c.request(url, result)
+	if err != nil {
+		return nil, err
+	}
+	if result.Status == "false" {
+		return nil, errors.New("Could not find the trending podcasts")
+	}
+	return result.Feeds, err
+}
+
+func (c *Client) AddByFeedURL(feedURL string) error {
+	url := fmt.Sprintf("add/byfeedurl?url=%s", feedURL)
+
+	result := &AddByFeedURLResponse{}
+	err := c.request(url, result)
+	if err != nil {
+		return err
+	}
+	if result.Status == "false" {
+		return errors.New("Could not add podcast by feed URL")
+	}
+
+	return nil
+}
