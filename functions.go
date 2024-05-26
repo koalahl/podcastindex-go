@@ -260,17 +260,17 @@ func (c *Client) PodcastsTrending(languages, categories, notCategories []string,
 	return result.Feeds, err
 }
 
-func (c *Client) AddByFeedURL(feedURL string) error {
+func (c *Client) AddByFeedURL(feedURL string) (int, error) {
 	url := fmt.Sprintf("add/byfeedurl?url=%s", feedURL)
 
 	result := &AddByFeedURLResponse{}
 	err := c.request(url, result)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	if result.Status == "false" {
-		return errors.New("Could not add podcast by feed URL")
+		return 0, errors.New("Could not add podcast by feed URL")
 	}
 
-	return nil
+	return result.FeedId, nil
 }
