@@ -40,6 +40,7 @@ type Podcast struct {
 	Language               string          `json:"language"`
 	Type                   int             `json:"type"`
 	Dead                   int             `json:"dead"`
+	EpisodeCount		   int 			   `json:"episodeCount"`
 	CrawlErrors            int             `json:"crawlErrors"`
 	ParseErrors            int             `json:"parseErrors"`
 	Categories             map[uint]string `json:"categories"`
@@ -49,7 +50,6 @@ type EpisodeArrayResponse struct {
 	Status      string     `json:"status"`
 	Items       []*Episode `json:"items"`
 	Count       int        `json:"count"`
-	Query       string     `json:"query"`
 	Description string     `json:"description"`
 }
 
@@ -57,7 +57,6 @@ type RandomEpisodesResponse struct {
 	Status      string     `json:"status"`
 	Items       []*Episode `json:"episodes"`
 	Count       int        `json:"count"`
-	Query       string     `json:"query"`
 	Description string     `json:"description"`
 }
 
