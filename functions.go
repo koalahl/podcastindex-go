@@ -31,6 +31,20 @@ func (c *Client) SearchPodcastsC(term string, clean bool, max int) ([]*Podcast, 
 	return result.Feeds, err
 }
 
+
+func (c *Client) getPodcastsByRss(rssurl string) (*Podcast, error) {
+	url := fmt.Sprintf("podcasts/byfeedurl?url=\"%s\"&fulltext", rssurl)
+	result := &PodcastResult{}
+	err := c.request(url, result)
+	if err != nil {
+		return nil, err
+	}
+	if result.Status == "false" {
+		return nil, errors.New("Could not find a podcast for that term")
+	}
+	return &result.Feed, err
+}
+
 /*This call returns all of the episodes where the specified person is mentioned.
 
 It searches the following fields:
@@ -46,6 +60,7 @@ func (c *Client) SearchEpisodes(term string) ([]*Episode, error) {
 	return c.getEpisodes(url, errors.New("Could not find a episode for that term"))
 }
 
+// internal function
 func (c *Client) getPodcast(url string, notFound error) (*Podcast, error) {
 	result := &PodcastResult{}
 	err := c.request(url, result)
